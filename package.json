@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "cli-progress": "^3.10.0",
-    "terminal-kit": "^2.4.0",
-    "txtgen": "^3.0.1"
+    "random-words": "^1.1.2",
+    "terminal-kit": "^2.4.0"
   }
 }

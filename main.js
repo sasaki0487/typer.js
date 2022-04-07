@@ -29,16 +29,16 @@
 
 const termkit = require( 'terminal-kit' )
 const term = termkit.terminal
-const txtgen = require('txtgen')
+const rw = require('random-words')
 
 var state
 var tick
 var wordCount
 var errorCount
 var x
-var paragraph
+var paragraph = ""
 var sbuf = new termkit.ScreenBuffer( {
-    dst: term , width: 30 , height: 8 , x: 3 , y: 3
+    dst: term , width: 30 , height: 10 , x: 3 , y: 3
 })
 var tbuf = new termkit.TextBuffer( { dst: sbuf, lineWrapWidth: 30, wrap: true  }  )
 
@@ -73,7 +73,7 @@ function printSpeed(){
 }
 
 function genString(){
-    paragraph = txtgen.paragraph(3)
+    paragraph = rw({exactly: 40, join: ' '})
 }
 
 function init(){
