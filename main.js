@@ -32,24 +32,25 @@ const term = termkit.terminal
 const rw = require('random-words')
 
 var state
-var tick
 var wordCount
 var errorCount
+var charCount
+var errorCharCount
 var x
 var paragraph = ""
+var startTime,currentTime
 var sbuf = new termkit.ScreenBuffer( {
-    dst: term , width: 30 , height: 10 , x: 3 , y: 3
+    dst: term , width: 30 , height: 10 , x: 3 , y: 4
 })
 var tbuf = new termkit.TextBuffer( { dst: sbuf, lineWrapWidth: 30, wrap: true  }  )
 
 function startTyping(){
-    term.clear()
 
     wordCount = 0
-    errorCount = 0
-    tick = 0
+    errorCharCount = 0
+    charCount = 0
     x = 0
-    //tbuf.setText('this is a test string for display.')
+    startTime = Date.now()
     genString()
     tbuf.setText(paragraph)
     tbuf.draw()
@@ -58,28 +59,39 @@ function startTyping(){
     sbuf.drawCursor()
 
 
-    setTimeout(() => {
+    setInterval(() => {
         calculateSpeed()
         printSpeed()
     },1000)
 }
 
 function calculateSpeed(){
-
+    currentTime = Date.now()
 }
 
 function printSpeed(){
+    var printStr = (charCount / ((currentTime - startTime)/60000)).toFixed(2) + ' Character Per Minute'
+    printStr += `\n  Correct: ${charCount} Error: ${errorCharCount}`
+    term.moveTo(3,0, printStr)
+    draw()
+}
 
+function draw(){
+    tbuf.draw()
+    sbuf.draw()
+    tbuf.drawCursor()
+    sbuf.drawCursor()
 }
 
 function genString(){
     paragraph = rw({exactly: 40, join: ' '})
+    paragraph += ' .'
 }
 
 function init(){
     state = 0
     term.fullscreen()
-    term('Press Enter to start\n')
+    term('Press Enter to start\nTime starts after Enter pressed, \nends after the last \'.\' character is correctly hit')
 
     term.grabInput()
 
@@ -90,20 +102,19 @@ function init(){
                 tbuf.setAttrAt({color:'green'},x%30,Math.floor(x/30))
                 tbuf.moveForward()
                 x += 1
+                if(name != 'SPACE')
+                    charCount += 1
             }
             else{
                 tbuf.setAttrAt({color:'red'},x%30,Math.floor(x/30))
                 tbuf.moveForward()
                 x += 1
+                errorCharCount += 1
             }
             if(x % 30 == 0){
                 tbuf.moveForward()
             }
-
-            tbuf.draw()
-            sbuf.draw()
-            tbuf.drawCursor()
-            sbuf.drawCursor()
+            draw()
         }
 
         switch(name){
@@ -130,10 +141,7 @@ function init(){
                         tbuf.moveBackward()
                     }
                 }
-                tbuf.draw()
-                sbuf.draw()
-                tbuf.drawCursor()
-                sbuf.drawCursor()
+                draw()
             break
         }
 
