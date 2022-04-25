@@ -37,6 +37,7 @@ var errorCount
 var charCount
 var errorCharCount
 var x
+var interv
 var paragraph = ""
 var startTime,currentTime
 var sbuf = new termkit.ScreenBuffer( {
@@ -59,7 +60,7 @@ function startTyping(){
     sbuf.drawCursor()
 
 
-    setInterval(() => {
+    interv = setInterval(() => {
         calculateSpeed()
         printSpeed()
     },1000)
@@ -110,6 +111,12 @@ function init(){
                 tbuf.moveForward()
                 x += 1
                 errorCharCount += 1
+            }
+            if (str[x-1] == '.' && name == '.'){
+                calculateSpeed()
+                printSpeed()
+                state = 0
+                clearInterval(interv)
             }
             if(x % 30 == 0){
                 tbuf.moveForward()
