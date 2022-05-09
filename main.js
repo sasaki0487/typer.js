@@ -141,12 +141,12 @@ function init(){
 
             case 'BACKSPACE' :
                 if(state == 1){
-                    x = x - 1
-                    tbuf.setAttrAt({color:'white'},x%30,Math.floor(x/30))
-                    tbuf.moveBackward()
                     if(x % 30 == 0){
                         tbuf.moveBackward()
                     }
+                    x = x - 1
+                    tbuf.setAttrAt({color:'white'},x%30,Math.floor(x/30))
+                    tbuf.moveBackward()
                 }
                 draw()
             break
