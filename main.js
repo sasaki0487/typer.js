@@ -54,6 +54,7 @@ function startTyping(){
     startTime = Date.now()
     genString()
     tbuf.setText(paragraph)
+    tbuf.moveTo(0,0)
     tbuf.draw()
     sbuf.draw()
     tbuf.drawCursor()
@@ -63,7 +64,7 @@ function startTyping(){
     interv = setInterval(() => {
         calculateSpeed()
         printSpeed()
-    },1000)
+    },40)
 }
 
 function calculateSpeed(){
